@@ -13,29 +13,39 @@ Esiste un oggetto JS in grado di gestire le date?
 Esistono dei metodi per trasformare una data in millisecondi? */
 
 //Prendo gli elementi dal DOM
-
 const daysElement = document.getElementById('days');
 const hoursElement = document.getElementById('hours');
 const minutesElement = document.getElementById('minutes');
 const secondsElement = document.getElementById('seconds');
 
-//Prendo la data odierna e estraggo i valori
- const now = new Date();
- const day = now.getDate();
- const hours = now.getHours();
- const minutes = now.getMinutes();
- const seconds = now.getSeconds();
+//Recupero la data di chiusura del countdown
+const countdownDate = new Date("December 25, 2022 00:00:00").getTime();
 
-const daysToChristmas = 24 - day;
-const hoursToChristmas = 23 - hours;
-const minutesToChristmas = 59 - minutes;
-const secondsToChristmas = 59 - seconds;
+//Creo la funzione per il countdown
+const getCountdown = () => {
+  const now = new Date().getTime();
+  const time = countdownDate - now;
 
- //Inizializzo I valori del countdown
- daysElement.innerText = daysToChristmas;
- hoursElement.innerText = hoursToChristmas;
- minutesElement.innerText = minutesToChristmas;
- secondsElement.innerText = secondsToChristmas;
+  //Calcolo il countdown
+  const days = Math.floor(time / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((time % (1000 * 60)) / 1000);
 
+  //Stampo in pagina
+  daysElement.innerText = days < 10 ? `0${days}` : days;
+  hoursElement.innerText = hours < 10 ? `0${hours}` : hours;
+  minutesElement.innerText = minutes < 10 ? `0${minutes}` : minutes;
+  secondsElement.innerText = seconds < 10 ? `0${seconds}` : seconds;
 
-console.log(hours,minutes,seconds,day);
+  return time;
+};
+
+getCountdown();
+
+//Creo funzione per aggiornare il countdown
+const countdown = setInterval(() => {
+  const time = getCountdown();
+  //Imposto la fine del countdown
+  if (time < 0) clearInterval(countdown);
+}, 1000);
